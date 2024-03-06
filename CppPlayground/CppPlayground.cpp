@@ -6,76 +6,6 @@
 #include <thread>
 #include <queue>
 
-void JoystickThread(std::queue<Playground::JoystickState>& dataToProcess, std::mutex& mut, bool& exit) {
-    while (TRUE) {
-        if (!dataToProcess.empty()) {
-            const auto& current_state = dataToProcess.front();
-            dataToProcess.pop();
-
-            char strText[512] = {};
-            for (int i = 0; i < 128; i++)
-            {
-                if (current_state.Buttons[i] & 0x80)
-                {
-                    char btnState[256];
-                    snprintf(btnState, sizeof(btnState), "%02d ", i);
-                    strcat_s(strText, btnState);
-                }
-            }
-
-            std::cout << "Joystick Moved:"
-                << " X: " << current_state.PositionX
-                << " Y: " << current_state.PositionY
-                << " Z: " << current_state.PositionZ
-                << " Buttons: " << strText
-                << std::endl;
-
-            std::cout << "Processed." << std::endl;
-
-            if (current_state.Buttons[11] & 0x80) {
-                std::cout << "Exiting joystick thread." << std::endl;
-                exit = true;
-                break;
-            }
-        }
-    }
-}
-
-void StartJoystick(Playground::JoystickInfo joysticks) {
-    using namespace Playground;
-    std::queue<Playground::JoystickState> dataToSend;
-    std::mutex mut;
-    bool exit = false;
-    std::thread t1(JoystickThread, std::ref(dataToSend), std::ref(mut), std::ref(exit));
-
-    auto joystickEvent = CreateEventA(NULL, false, false, "JoystickStateChange");
-
-    Joystick js(joysticks, joystickEvent);
-    JoystickState prevState;
-
-    js.StartAcquiring();
-
-    while (TRUE) {
-        auto dwResult = WaitForSingleObject(joystickEvent, 0);
-        if (dwResult == WAIT_OBJECT_0) {
-            // Event is set. If the event was created as 
-            // autoreset, it has also been reset. 
-            JoystickState current_state;
-            js.GetJoystickState(current_state);
-
-            dataToSend.push(current_state);            
-        }
-
-        if (exit) {
-            std::cout << "Exiting joystick acquiring thread." << std::endl;
-            break;
-        }
-    }
-    t1.join();
-
-    js.StopAcquiring();
-}
-
 void thread_input() {
     while (TRUE) {
         std::cout << "Enter Text: " << std::endl;
@@ -87,6 +17,35 @@ void thread_input() {
         if (line == "exit") {
             std::cout << "Exiting input thread." << std::endl;
             break;
+        }
+    }
+}
+
+void thread_joystick_process(Playground::Joystick &js) {
+    js.StartAcquiring();
+
+    while (js.IsAcquiring()) {
+        if (js.States() > 0) {
+            auto state = js.GetNextState();
+
+            char strText[512] = {};
+            for (int i = 0; i < 128; i++)
+            {
+                if (state.Buttons[i] & 0x80)
+                {
+                    char btnState[256];
+                    snprintf(btnState, sizeof(btnState), "%02d ", i);
+                    strcat_s(strText, btnState);
+                }
+            }
+
+            std::cout << "Joystick Moved:"
+                << " X: " << state.PositionX
+                << " Y: " << state.PositionY
+                << " Z: " << state.PositionZ
+                << " Buttons: " << strText
+                << std::endl;
+
         }
     }
 }
@@ -134,9 +93,11 @@ int main()
             }
         }
     }
-
-    std::thread jsThread(StartJoystick, std::ref(joysticks[index]));
-    std::thread inputThread(thread_input);
+    
+    Playground::Joystick js(joysticks[index]);
+    
+    std::thread jsThread(thread_joystick_process, std::ref(js));
+    std::thread inputThread(thread_input);  
 
     jsThread.join();
     inputThread.join();

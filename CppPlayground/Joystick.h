@@ -9,6 +9,9 @@
 #include <vector>
 #include <iostream>
 
+#include <thread>
+#include <queue>
+
 namespace Playground {
 
 	struct JoystickInfo {
@@ -30,7 +33,7 @@ namespace Playground {
 	class Joystick
 	{
 	public:
-		Joystick(JoystickInfo info, HANDLE stateChange);
+		Joystick(JoystickInfo info);
 		~Joystick();
 
 		static std::vector<JoystickInfo> enumerate_joysticks();
@@ -38,15 +41,25 @@ namespace Playground {
 
 		HRESULT StartAcquiring();
 		HRESULT StopAcquiring();
+		bool IsAcquiring();
+
 		void GetJoystickState(JoystickState& current_state);
+		JoystickState GetNextState();
+		size_t States() { return joystickData_.size(); }
 
 		bool connected_ = false;
 
 	private:
 		LPDIRECTINPUTDEVICE8 js_ = nullptr;
-		
-		std::vector<JoystickInfo> joysticks_;
 		LPDIRECTINPUT8 di_ = nullptr;
+
+		HANDLE joystickEvent_;
+		std::queue<Playground::JoystickState> joystickData_;
+		std::mutex mut_;
+		bool acquiring = false;
+
+		std::thread jsThread_;
+		void StartJoystick(std::queue<JoystickState>& queue);
 	};
 
 }

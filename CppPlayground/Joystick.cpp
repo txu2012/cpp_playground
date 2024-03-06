@@ -18,8 +18,7 @@ namespace Playground {
 		return ret;
 	}
 
-	Joystick::Joystick(JoystickInfo info, HANDLE stateChange) {
-
+	Joystick::Joystick(JoystickInfo info) {
 		try {
 			HRESULT hr;
 			// Create Object
@@ -38,7 +37,8 @@ namespace Playground {
 			}
 
 			// Set event to joystick
-			hr = js_->SetEventNotification(stateChange);
+			joystickEvent_ = CreateEventA(NULL, false, false, "JoystickStateChange");
+			hr = js_->SetEventNotification(joystickEvent_);
 
 			connected_ = true;
 
@@ -48,7 +48,30 @@ namespace Playground {
 			std::cout << "Exception in joystick. \n" << ex.what() << std::endl;
 		}
 	}
-	Joystick::~Joystick() {}
+	Joystick::~Joystick() { 
+		if (jsThread_.joinable()) jsThread_.join(); 
+	}
+
+	void Joystick::StartJoystick(std::queue<JoystickState> &queue) {
+		while (acquiring) {
+			auto dwResult = WaitForSingleObject(joystickEvent_, 0);
+			if (dwResult == WAIT_OBJECT_0) {
+				// Event is set. If the event was created as 
+				// autoreset, it has also been reset. 
+				JoystickState current_state;
+				GetJoystickState(current_state);
+
+				if (current_state.Buttons[11] & 0x80) {
+					std::cout << "Exiting joystick thread." << std::endl;
+					break;
+				}
+
+				queue.push(current_state);
+			}
+		}
+
+		StopAcquiring();
+	}
 
 	HRESULT Joystick::StartAcquiring() {
 		HRESULT hr = js_->Acquire();
@@ -58,14 +81,30 @@ namespace Playground {
 
 		std::cout << "Acquiring Joystick Started." << std::endl;
 
+		acquiring = true;
+		jsThread_ = std::thread(&Joystick::StartJoystick, this, std::ref(joystickData_));
+
 		return hr;
 	}
 
 	HRESULT Joystick::StopAcquiring() {
 		HRESULT hr = js_->Unacquire();
 		std::cout << "Acquiring Joystick Stopped." << std::endl;
+		acquiring = false;
 
 		return hr;
+	}
+
+	bool Joystick::IsAcquiring() {
+		return acquiring;
+	}
+
+	JoystickState Joystick::GetNextState() {
+		JoystickState state;
+		state = joystickData_.front();
+		joystickData_.pop();
+
+		return state;
 	}
 
 	void Joystick::GetJoystickState(JoystickState &current_state) {
@@ -119,9 +158,6 @@ namespace Playground {
 				instance2.dwSize = sizeof(DIDEVICEINSTANCE);
 				hr = joystick->GetDeviceInfo(&instance2);
 
-				//OLECHAR* guidString;
-				//hr = StringFromCLSID(instance2.guidProduct, &guidString);				
-
 				std::wstring name(instance2.tszProductName);
 
 				JoystickInfo info;
@@ -130,16 +166,6 @@ namespace Playground {
 				info.instance_guid = instance2.guidInstance;
 
 				joysticks.push_back(info);
-
-				/*char prod_guid[37];
-				char instance_guid[37];
-				Joystick::guid_to_str(&info.product_guid, prod_guid);
-				Joystick::guid_to_str(&info.instance_guid, instance_guid);
-				std::cout << "Name: " << info.name
-						  << "\nproduct guid: " << prod_guid
-						  << "\ninstance guid: " << instance_guid << std::endl;*/
-
-				//::CoTaskMemFree(guidString);
 
 				return DIENUM_STOP;
 			} , NULL, DIEDFL_ATTACHEDONLY);
