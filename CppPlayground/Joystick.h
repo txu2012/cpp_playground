@@ -34,7 +34,8 @@ namespace Playground {
 		~Joystick();
 
 		static std::vector<JoystickInfo> enumerate_joysticks();
-		
+		static char* guid_to_str(const GUID* id, char* out);
+
 		HRESULT StartAcquiring();
 		HRESULT StopAcquiring();
 		void GetJoystickState(JoystickState& current_state);

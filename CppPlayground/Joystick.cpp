@@ -7,7 +7,7 @@ LPDIRECTINPUT8 di = nullptr;
 std::vector<Playground::JoystickInfo> joysticks;
 
 namespace Playground {
-	char* guid_to_str(const GUID* id, char* out) {
+	char* Joystick::guid_to_str(const GUID* id, char* out) {
 		int i;
 		char* ret = out;
 		out += sprintf(out, "%.8lX-%.4hX-%.4hX-", id->Data1, id->Data2, id->Data3);
@@ -119,9 +119,8 @@ namespace Playground {
 				instance2.dwSize = sizeof(DIDEVICEINSTANCE);
 				hr = joystick->GetDeviceInfo(&instance2);
 
-				OLECHAR* guidString;
-				hr = StringFromCLSID(instance2.guidProduct, &guidString);
-				
+				//OLECHAR* guidString;
+				//hr = StringFromCLSID(instance2.guidProduct, &guidString);				
 
 				std::wstring name(instance2.tszProductName);
 
@@ -132,15 +131,15 @@ namespace Playground {
 
 				joysticks.push_back(info);
 
-				char prod_guid[37];
+				/*char prod_guid[37];
 				char instance_guid[37];
-				guid_to_str(&info.product_guid, prod_guid);
-				guid_to_str(&info.instance_guid, instance_guid);
+				Joystick::guid_to_str(&info.product_guid, prod_guid);
+				Joystick::guid_to_str(&info.instance_guid, instance_guid);
 				std::cout << "Name: " << info.name
 						  << "\nproduct guid: " << prod_guid
-						  << "\ninstance guid: " << instance_guid << std::endl;
+						  << "\ninstance guid: " << instance_guid << std::endl;*/
 
-				::CoTaskMemFree(guidString);
+				//::CoTaskMemFree(guidString);
 
 				return DIENUM_STOP;
 			} , NULL, DIEDFL_ATTACHEDONLY);
