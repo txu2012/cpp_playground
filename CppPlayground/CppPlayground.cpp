@@ -3,12 +3,11 @@
 
 #include <iostream>
 #include "Joystick.h"
+#include <thread>
+#include <queue>
 
-int main()
-{
+void StartJoystick(std::queue<Playground::JoystickState>& dataToSend, std::mutex& mut, bool &exit) {
     using namespace Playground;
-    std::cout << "Hello World!\n";
-
     auto joysticks = Joystick::enumerate_joysticks();
 
     std::cout << "Num joysticks found: " << joysticks.size() << std::endl;
@@ -28,6 +27,29 @@ int main()
             JoystickState current_state;
             js.GetJoystickState(current_state);
 
+            dataToSend.push(current_state);
+
+            if (exit) {
+                std::cout << "Exiting joystick acquiring thread." << std::endl;
+                break;
+            }
+        }
+    }
+
+    js.StopAcquiring();
+}
+
+void JoystickThread() {
+    std::queue<Playground::JoystickState> dataToProcess;
+    std::mutex mut;
+    bool exit = false;
+    std::thread t1(StartJoystick, std::ref(dataToProcess), std::ref(mut), std::ref(exit));
+
+    while (TRUE) {
+        if (!dataToProcess.empty()) {
+            const auto& current_state = dataToProcess.front();
+            dataToProcess.pop();
+
             char strText[512] = {};
             for (int i = 0; i < 128; i++)
             {
@@ -45,37 +67,43 @@ int main()
                 << " Z: " << current_state.PositionZ
                 << " Buttons: " << strText
                 << std::endl;
+
+            std::cout << "Processed." << std::endl;
+
+            if (current_state.Buttons[11] & 0x80) {
+                std::cout << "Exiting joystick thread." << std::endl;
+                exit = true;
+                break;
+            }
         }
     }
+    t1.join();
+}
 
-    /*while (js.connected_) {
-        JoystickState current_state;
-        js.GetJoystickState(current_state);
+void thread_input() {
+    while (TRUE) {
+        std::cout << "Enter Text: " << std::endl;
 
-        if (prevState.PositionX != current_state.PositionX ||
-            prevState.PositionY != current_state.PositionY ||
-            prevState.PositionZ != current_state.PositionZ) {
-            std::cout << "Joystick Moved:" 
-                << " X: " << current_state.PositionX
-                << " Y: " << current_state.PositionY
-                << " Z: " << current_state.PositionZ
-                << std::endl;
+        std::string line;
+        std::getline(std::cin, line);
+
+        std::transform(line.begin(), line.end(), line.begin(), [](unsigned char c) { return std::tolower(c); });
+        if (line == "exit") {
+            std::cout << "Exiting input thread." << std::endl;
+            break;
         }
+    }
+}
 
-        if (current_state.ButtonPressed) {
-            char strText[512] = {};
-            for (int i = 0; i < 128; i++)
-            {
-                if (current_state.Buttons[i] & 0x80)
-                {
-                    char btnState[256];
-                    snprintf(btnState, sizeof(btnState), "%02d ", i);
-                    strcat_s(strText, btnState);
-                }
-            }
-            std::cout << "Buttons: " << strText << std::endl;
-        }
+int main()
+{
+    std::cout << "Hello World!\n";
 
-        prevState = current_state;
-    }*/
+    std::thread jsThread(JoystickThread);
+    std::thread inputThread(thread_input);
+
+    jsThread.join();
+    inputThread.join();
+
+    std::cout << "Threads finished" << std::endl;
 }

@@ -36,15 +36,14 @@ namespace Playground {
 		static std::vector<JoystickInfo> enumerate_joysticks();
 		
 		HRESULT StartAcquiring();
+		HRESULT StopAcquiring();
 		void GetJoystickState(JoystickState& current_state);
 
 		bool connected_ = false;
 
 	private:
-		GUID guid_;
 		LPDIRECTINPUTDEVICE8 js_ = nullptr;
-
-		//HRESULT hr_;
+		
 		std::vector<JoystickInfo> joysticks_;
 		LPDIRECTINPUT8 di_ = nullptr;
 	};

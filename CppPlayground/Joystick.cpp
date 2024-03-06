@@ -40,10 +40,6 @@ namespace Playground {
 			// Set event to joystick
 			hr = js_->SetEventNotification(stateChange);
 
-			// Set the cooperative level to let DInput know how this device should
-			// interact with the system and with other DInput applications.
-			//if (FAILED(hr_ = js_->SetCooperativeLevel(hDlg, DISCL_EXCLUSIVE | DISCL_FOREGROUND)))
-			//	return hr;
 			connected_ = true;
 
 			std::cout << "Joystick created." << std::endl;
@@ -60,7 +56,14 @@ namespace Playground {
 		while (hr == DIERR_INPUTLOST)
 			hr = js_->Acquire();
 
-		std::cout << "Acquring Joystick Started." << std::endl;
+		std::cout << "Acquiring Joystick Started." << std::endl;
+
+		return hr;
+	}
+
+	HRESULT Joystick::StopAcquiring() {
+		HRESULT hr = js_->Unacquire();
+		std::cout << "Acquiring Joystick Stopped." << std::endl;
 
 		return hr;
 	}
@@ -128,7 +131,7 @@ namespace Playground {
 				info.instance_guid = instance2.guidInstance;
 
 				joysticks.push_back(info);
-				//std::cout << "Joystick: " << guid_to_str(&instance2.guidProduct, guid) << std::endl;
+
 				char prod_guid[37];
 				char instance_guid[37];
 				guid_to_str(&info.product_guid, prod_guid);
