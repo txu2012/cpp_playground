@@ -1,6 +1,1 @@
-﻿  CppPlayground.cpp
-  D:\DirectX SDK\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-D:\Github\Cpp_playground\cpp_playground\CppPlayground\CppPlayground.cpp(119,23): warning C4018: '<': signed/unsigned mismatch
-D:\Github\Cpp_playground\cpp_playground\CppPlayground\CppPlayground.cpp(141,23): warning C4018: '>=': signed/unsigned mismatch
-D:\Github\Cpp_playground\cpp_playground\CppPlayground\CppPlayground.cpp(120,14): warning C4101: 'prod_guid': unreferenced local variable
-  CppPlayground.vcxproj -> D:\Github\Cpp_playground\cpp_playground\Debug\CppPlayground.exe
+﻿  CppPlayground.vcxproj -> D:\Github\Cpp_playground\cpp_playground\Debug\CppPlayground.lib

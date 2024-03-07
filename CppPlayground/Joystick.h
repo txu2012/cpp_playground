@@ -1,4 +1,5 @@
 #pragma once
+
 #include <dinput.h>
 #include <dinputd.h>
 #include <oleauto.h>
@@ -11,6 +12,7 @@
 
 #include <thread>
 #include <queue>
+
 
 namespace Playground {
 
@@ -33,12 +35,13 @@ namespace Playground {
 	class Joystick
 	{
 	public:
-		Joystick(JoystickInfo info);
+		Joystick();
 		~Joystick();
 
 		static std::vector<JoystickInfo> enumerate_joysticks();
 		static char* guid_to_str(const GUID* id, char* out);
 
+		void CreateJoystick(JoystickInfo info);
 		HRESULT StartAcquiring();
 		HRESULT StopAcquiring();
 		bool IsAcquiring();

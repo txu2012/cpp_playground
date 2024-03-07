@@ -18,7 +18,13 @@ namespace Playground {
 		return ret;
 	}
 
-	Joystick::Joystick(JoystickInfo info) {
+	Joystick::Joystick() {
+	}
+	Joystick::~Joystick() { 
+		if (jsThread_.joinable()) jsThread_.join(); 
+	}
+
+	void Joystick::CreateJoystick(JoystickInfo info) {
 		try {
 			HRESULT hr;
 			// Create Object
@@ -44,12 +50,9 @@ namespace Playground {
 
 			std::cout << "Joystick created." << std::endl;
 		}
-		catch (std::exception &ex) {
+		catch (std::exception& ex) {
 			std::cout << "Exception in joystick. \n" << ex.what() << std::endl;
 		}
-	}
-	Joystick::~Joystick() { 
-		if (jsThread_.joinable()) jsThread_.join(); 
 	}
 
 	void Joystick::StartJoystick(std::queue<JoystickState> &queue) {

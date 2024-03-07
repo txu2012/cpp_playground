@@ -18,9 +18,27 @@
     <ClInclude Include="Main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MainFrame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CppPresenter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="base.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CppPresenter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

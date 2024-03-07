@@ -1,0 +1,49 @@
+﻿  CppPlayground.cpp
+  D:\DirectX SDK\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+D:\Github\Cpp_playground\cpp_playground\CppPlayground\CppPlayground.cpp(68,23): warning C4018: '<': signed/unsigned mismatch
+D:\Github\Cpp_playground\cpp_playground\CppPlayground\CppPlayground.cpp(90,23): warning C4018: '>=': signed/unsigned mismatch
+D:\Github\Cpp_playground\cpp_playground\CppPlayground\CppPlayground.cpp(69,14): warning C4101: 'prod_guid': unreferenced local variable
+  Joystick.cpp
+  D:\DirectX SDK\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+D:\Github\Cpp_playground\cpp_playground\CppPlayground\Joystick.cpp(3,1): warning C4005: 'DIRECTINPUT_VERSION': macro redefinition
+D:\DirectX SDK\include\dinput.h(42): message : see previous definition of 'DIRECTINPUT_VERSION'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\xstring(2541,23): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\xstring(2552): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)' being compiled
+          with
+          [
+              _Iter=wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\xstring(2552): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(_Iter,const _Iter,std::input_iterator_tag)' being compiled
+          with
+          [
+              _Iter=wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\xstring(2532): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)' being compiled
+          with
+          [
+              _Iter=wchar_t *
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\xstring(2532): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct<wchar_t*>(const _Iter,const _Iter,std::forward_iterator_tag)' being compiled
+          with
+          [
+              _Iter=wchar_t *
+          ]
+D:\Github\Cpp_playground\cpp_playground\CppPlayground\Joystick.cpp(164): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+D:\Github\Cpp_playground\cpp_playground\CppPlayground\Joystick.cpp(164): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+          with
+          [
+              _Elem=wchar_t,
+              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
+              _Alloc=std::allocator<char>
+          ]
+  CppPlayground.vcxproj -> D:\Github\Cpp_playground\cpp_playground\Win32\Release\CppPlayground.lib

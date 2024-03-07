@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppPlayground", "CppPlayground\CppPlayground.vcxproj", "{AFF339F6-6B5A-42F3-99EA-01AF1F23AD0F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppPlaygroundWxGui", "CppPlaygroundWxGui\CppPlaygroundWxGui.vcxproj", "{E533332C-47AF-4E3C-9760-80191C8C37B0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AFF339F6-6B5A-42F3-99EA-01AF1F23AD0F} = {AFF339F6-6B5A-42F3-99EA-01AF1F23AD0F}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

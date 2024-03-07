@@ -1,1 +1,3 @@
-﻿  CppPlaygroundWxGui.vcxproj -> D:\Github\Cpp_playground\cpp_playground\Debug\CppPlaygroundWxGui.exe
+﻿  CppPresenter.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  CppPlaygroundWxGui.vcxproj -> D:\Github\Cpp_playground\cpp_playground\Debug\CppPlaygroundWxGui.exe

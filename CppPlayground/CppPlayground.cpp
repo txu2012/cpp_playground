@@ -60,7 +60,7 @@ bool tryParse(std::string& input, int& output) {
     return true;
 }
 
-int main()
+int temp()
 {
     auto joysticks = Playground::Joystick::enumerate_joysticks();
     std::cout << "Num joysticks found: " << joysticks.size() << std::endl;
@@ -94,7 +94,8 @@ int main()
         }
     }
     
-    Playground::Joystick js(joysticks[index]);
+    Playground::Joystick js;
+    js.CreateJoystick(joysticks[index]);
     
     std::thread jsThread(thread_joystick_process, std::ref(js));
     std::thread inputThread(thread_input);  
@@ -103,4 +104,6 @@ int main()
     inputThread.join();
 
     std::cout << "Threads finished" << std::endl;
+
+    return 0;
 }
